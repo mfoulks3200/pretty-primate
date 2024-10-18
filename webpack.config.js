@@ -4,6 +4,7 @@ const packageJson = require('./package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const extensionPages = {
     options: './src/pages/options/index.tsx',
@@ -40,11 +41,24 @@ module.exports = {
     entry: {
         ...extensionPages,
         worker: './src/worker/index.ts',
+        'monaco/editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
+        'monaco/json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
+        'monaco/css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
+        'monaco/html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
+        'monaco/ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker',
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.css$/i,
+                include: [
+                    path.resolve(__dirname, 'src'),
+                    path.resolve(__dirname, 'node_modules', 'monaco-editor', 'esm')
+                ],
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
+            },
+            {
+                test: /\.(tsx|ts)?$/,
                 use: {
                     loader: 'ts-loader',
                     options: {
@@ -55,6 +69,10 @@ module.exports = {
                 },
                 exclude: /node_modules/,
             },
+            {
+                test: /\.ttf$/,
+                use: ['file-loader']
+            }
         ],
     },
     plugins: [
@@ -86,11 +104,18 @@ module.exports = {
         new CleanWebpackPlugin()
     ],
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js'],
+        extensions: ['.tsx', '.ts', '.js'],
+        plugins: [
+            new TsconfigPathsPlugin()
+        ]
     },
     output: {
         filename: '[name]/bundle.js',
         path: path.resolve(__dirname, 'extension'),
+        chunkFilename: 'chunks/[name].js'
+    },
+    optimization: {
+
     },
     ...(isDevServer ? devServerOpts : {})
 };
