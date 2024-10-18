@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "permissions": [
+        "storage",
+        "scripting",
+        "tabs",
+        "notifications"
+    ],
+    "options_page": "options/index.html",
+    "background": {
+        "service_worker": "worker/bundle.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "popup/index.html",
+        "default_icon": "assets/images/icon-32.png"
+    },
+    "icons": {
+        "128": "assets/images/icon-128.png"
+    },
+    "devtools_page": "devtools/index.html",
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "*.js",
+                "*.css",
+                "*.svg",
+                "icon-128.png",
+                "icon-32.png"
+            ],
+            "matches": [
+                "*://*/*"
+            ]
+        }
+    ]
+}
