@@ -1,4 +1,7 @@
-import { SidebarController, SidebarPage } from "@/components/SidebarController";
+import {
+  SidebarController,
+  SidebarPage,
+} from "@/src/components/SidebarController";
 import { Code, Recycle, Settings, Sparkle } from "lucide-react";
 import { SettingsPage } from "./SettingsPage";
 import { useSetting } from "@/src/common/Settings";
@@ -31,6 +34,7 @@ export const LocalPages = ({ pageId }: { pageId: string }) => {
       href: "/scripts/recycle",
       icon: Recycle,
       children: <div>Recycle Bin</div>,
+      disabled: true,
     },
     {
       id: "settings",

@@ -24,7 +24,14 @@ export const ButtonTab = React.forwardRef<HTMLButtonElement, ButtonTabProps>(
       >
         {Icon && <Icon size={32} absoluteStrokeWidth />}
         {children}
-        {afterIcon ? afterIcon : <></>}
+        {afterIcon ? (
+          <>
+            <div className={"basis-full"}></div>
+            {afterIcon}
+          </>
+        ) : (
+          <></>
+        )}
       </Button>
     );
   }

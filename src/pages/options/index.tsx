@@ -1,10 +1,11 @@
 import "../global.css";
 import { createRoot } from "react-dom/client";
-import { ThemeWrapper } from "@/components/ThemeProvider";
+import { ThemeWrapper } from "@/src/components/ThemeProvider";
 import { createHashRouter, redirect, RouterProvider } from "react-router-dom";
 import { Navigation } from "./Navigation";
 import { LocalPages } from "./pages/local/Local";
 import { ScriptPage } from "./pages/editor/ScriptPage";
+import { UserscriptManager } from "@/src/common/Userscript";
 
 document.body.innerHTML = `<div id="root" class="flex flex-col"></div>`;
 
@@ -39,12 +40,19 @@ const router = createHashRouter([
     element: <LocalPages pageId="about" />,
   },
   {
-    path: "/editor",
-    element: <ScriptPage pageId="main-script" />,
+    path: "/editor/:uuid",
+    element: <ScriptPage pageId="file-editor" />,
+    loader: ({ params }) => {
+      return UserscriptManager.getUserscript(params.uuid!)!;
+    },
     children: [
       {
-        path: "browser",
-        element: <LocalPages pageId="main-script" />,
+        path: "file/:fileUuid",
+        element: <ScriptPage pageId="file-editor" />,
+      },
+      {
+        path: "settings",
+        element: <ScriptPage pageId="settings" />,
       },
     ],
   },

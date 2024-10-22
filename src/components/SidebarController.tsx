@@ -16,7 +16,9 @@ export interface SidebarPage {
   icon?: ForwardRefExoticComponent<
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
   >;
+  afterIcon?: React.ReactNode;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 export interface SidebarAction {
@@ -81,10 +83,13 @@ export const SidebarController = ({
                       key={page.id}
                       selected={page.id == active}
                       icon={page.icon}
+                      afterIcon={page.afterIcon}
                       onClick={() => {
+                        if (page.disabled) return;
                         setActive(page.id);
                         navigate(page.href);
                       }}
+                      disabled={page.disabled ?? false}
                     >
                       {page.title}
                     </ButtonTab>
@@ -92,6 +97,7 @@ export const SidebarController = ({
                 } else if (page.type == "header") {
                   return (
                     <div
+                      key={page.title}
                       className={
                         "text-gray-600 text-sm select-none ml-4 mt-4 mb-2"
                       }
@@ -112,13 +118,21 @@ export const SidebarController = ({
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          {
-            (
-              pages.find(
-                (page) => page.type != "header" && page.id == active
-              ) as SidebarPage
-            ).children
-          }
+          <div
+            className={"overflow-y-scroll"}
+            style={{
+              maxHeight: "calc( 100vh - 64px )",
+              height: "calc( 100vh - 64px )",
+            }}
+          >
+            {
+              (
+                pages.find(
+                  (page) => page.type != "header" && page.id == active
+                ) as SidebarPage
+              ).children
+            }
+          </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

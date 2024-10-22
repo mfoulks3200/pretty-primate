@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import packageJson from "../../package.json";
+import { MonacoThemes } from "../pages/common/MonacoThemes";
 
 interface SettingsCategory {
     title: string;
@@ -58,11 +59,23 @@ export const DefaultSettings: (Omit<SettingsItem, "createdTime" | "createdVersio
         {
             id: "colorMode",
             categoryId: "appearance",
-            title: "Theme",
+            title: "Interface Theme",
             description: "The color mode of pretty primate.",
             value: "system",
             defaultValue: "system",
             enum: ["system", "light", "dark"],
+            control: {
+                type: "select"
+            }
+        },
+        {
+            id: "monacoThemeName",
+            categoryId: "appearance",
+            title: "Editor Theme",
+            description: "The editor theme of pretty primate.",
+            value: "",
+            defaultValue: MonacoThemes.map((theme) => theme.name)[0],
+            enum: MonacoThemes.map((theme) => theme.name),
             control: {
                 type: "select"
             }

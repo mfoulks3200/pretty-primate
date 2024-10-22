@@ -1,16 +1,17 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/src/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/src/components/ui/select";
 import {
   DisplayableSettingsItem,
   SettingsManager,
 } from "@/src/common/Settings";
 import { capitalizeFirstLetter } from "@/src/common/Util";
+import { InputControl } from "@/src/pages/common/InputControl";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -72,12 +73,8 @@ export const SettingControl = ({
   }
 
   return (
-    <div className={"flex gap-4 items-center"}>
-      <div className={"flex flex-col gap-2 basis-1/2"}>
-        <div className={"text-xl"}>{setting.title}</div>
-        <div className={"text-gray-600"}>{setting.description}</div>
-      </div>
-      <div className={"basis-1/2"}>{control}</div>
-    </div>
+    <InputControl title={setting.title} description={setting.description}>
+      {control}
+    </InputControl>
   );
 };

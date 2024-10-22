@@ -1,5 +1,5 @@
 import { SettingsCategories } from "@/src/common/Settings";
-import { SettingCategory } from "./Settings/SettingCategory";
+import { SettingCategory } from "./settings/SettingCategory";
 
 export const SettingsPage = () => {
   return (

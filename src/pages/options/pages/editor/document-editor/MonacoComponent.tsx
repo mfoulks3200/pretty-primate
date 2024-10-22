@@ -1,10 +1,16 @@
 import React, { useRef, useEffect } from "react";
 import * as monaco from "monaco-editor";
+import { MonacoThemes } from "@/src/pages/common/MonacoThemes";
+import { SettingsManager } from "@/src/common/Settings";
 
-import("monaco-themes/themes/Monokai.json").then((data: any) => {
-  monaco.editor.defineTheme("monokai", data);
-  monaco.editor.setTheme("monokai");
-});
+for (const MonacoTheme of MonacoThemes) {
+  monaco.editor.defineTheme(MonacoTheme.id, MonacoTheme.data as any);
+}
+monaco.editor.setTheme(
+  (SettingsManager.getSettingValue("monacoThemeName") as string)
+    .toLowerCase()
+    .replaceAll(/[^a-z0-9]/gm, "-")
+);
 
 // @ts-ignore
 self.MonacoEnvironment = {
@@ -30,21 +36,31 @@ monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
   allowNonTsExtensions: true,
 });
 
-export const MonacoComponent: React.FC = () => {
+export const MonacoComponent = ({
+  defaultContent,
+  language,
+  onChange,
+}: {
+  defaultContent: string;
+  language: string;
+  onChange: (content: string) => void;
+}) => {
   const divEl = useRef<HTMLDivElement>(null);
   let editor: monaco.editor.IStandaloneCodeEditor;
   useEffect(() => {
     if (divEl.current) {
       editor = monaco.editor.create(divEl.current, {
-        value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
-          "\n"
-        ),
-        language: "typescript",
+        value: defaultContent,
+        language: language.toLowerCase(),
       });
     }
 
     let resizeObserver = new ResizeObserver(() => {
       editor.layout();
+    });
+
+    editor.onDidChangeModelContent(() => {
+      onChange(editor.getValue());
     });
 
     resizeObserver.observe(divEl.current!);
