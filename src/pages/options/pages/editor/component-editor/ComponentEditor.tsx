@@ -8,6 +8,8 @@ import { Editor, Frame } from "@craftjs/core";
 import { Components } from "@/src/API/ui";
 import { Element } from "@craftjs/core";
 import { ComponentToolbar } from "./ComponentToolbar";
+import { RenderNode } from "@/src/API/ui/editor/RenderNode";
+import { ColorControlContent } from "@/src/API/ui/Inspector/ColorControl";
 
 export const ComponentEditor = ({
   onChange,
@@ -17,10 +19,11 @@ export const ComponentEditor = ({
   content: string;
 }) => {
   return (
-    <div className={"w-full h-full basis-full flex"}>
+    <div className={"w-full h-full basis-full flex craftjs-renderer"}>
       <Editor
         resolver={Components}
         onNodesChange={(query) => onChange(query.serialize())}
+        onRender={RenderNode}
       >
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel>
@@ -28,17 +31,14 @@ export const ComponentEditor = ({
               <ComponentToolbar />
               <div className="p-8 w-full h-full flex items-center justify-center">
                 <Frame data={content}>
-                  <Element is={Components.Stack} canvas>
-                    <Components.Card>
-                      <Components.Text text={"Hello World"} />
-                    </Components.Card>
-                  </Element>
+                  <Element is={Components.Stack} canvas />
                 </Frame>
               </div>
             </div>
+            <ColorControlContent />
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel defaultSize={25}>
+          <ResizablePanel defaultSize={30}>
             <Toolbox />
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -1,7 +1,6 @@
-import { Slider } from "@/src/components/ui/slider";
-import { useNode } from "@craftjs/core";
+import { useNode, Element } from "@craftjs/core";
 import React from "react";
-import { BoxModelControl, SliderControl } from "../InspectorControls";
+import { BoxModelControl } from "../../Inspector/InspectorControls";
 
 export const Card = ({
   padding = {
@@ -48,30 +47,7 @@ export const CardSettings = () => {
     padding: node.data.props.padding,
   }));
 
-  return (
-    <>
-      <BoxModelControl
-        title={"Padding"}
-        key={"padding-box-model"}
-        value={{
-          top: padding.top,
-          left: padding.left,
-          right: padding.right,
-          bottom: padding.bottom,
-        }}
-        onChange={(top, left, right, bottom) => {
-          setProp((props: any) => {
-            props.padding = {
-              top,
-              left,
-              right,
-              bottom,
-            };
-          }, 250);
-        }}
-      />
-    </>
-  );
+  return <></>;
 };
 
 export const CardDefaultProps = {
@@ -85,6 +61,9 @@ export const CardDefaultProps = {
 
 Card.craft = {
   props: CardDefaultProps,
+  rules: {
+    canDrag: () => true,
+  },
   related: {
     settings: CardSettings,
   },

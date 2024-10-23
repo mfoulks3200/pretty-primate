@@ -10,15 +10,29 @@ import { useEditor } from "@craftjs/core";
 import { Bug, Redo, Undo } from "lucide-react";
 
 export const ComponentToolbar = () => {
-  const { actions, query, enabled } = useEditor((state) => ({
-    enabled: state.options.enabled,
-  }));
+  const { actions, query, enabled, canUndo, canRedo } = useEditor(
+    (state, query) => ({
+      enabled: state.options.enabled,
+      canUndo: state.options.enabled && query.history.canUndo(),
+      canRedo: state.options.enabled && query.history.canRedo(),
+    })
+  );
 
   return (
     <div className={"p-1 h-fit max-h-fit border-b border-b-border flex gap-1"}>
       <div className={"flex gap-1"}>
-        <IconButton icon={Undo} onClick={() => {}} tooltip={"Undo"} />
-        <IconButton icon={Redo} onClick={() => {}} tooltip={"Redo"} />
+        <IconButton
+          icon={Undo}
+          disabled={!canUndo}
+          onClick={() => actions.history.undo()}
+          tooltip={"Undo"}
+        />
+        <IconButton
+          icon={Redo}
+          disabled={!canRedo}
+          onClick={() => actions.history.redo()}
+          tooltip={"Redo"}
+        />
         <IconButton
           icon={Bug}
           onClick={() => {

@@ -1,19 +1,28 @@
-import { Slider } from "@/src/components/ui/slider";
-import { Textarea } from "@/src/components/ui/textarea";
 import { useNode } from "@craftjs/core";
 import React, { useState, useEffect } from "react";
 import ContentEditable from "react-contenteditable";
-import { SliderControl, TextareaControl } from "../InspectorControls";
+import {
+  SliderControl,
+  TextareaControl,
+} from "../../Inspector/InspectorControls";
+import { BoxModel, defaultBoxModel } from "../../css/CSSProps";
+import {
+  boxModelToCssProps,
+  computeStyles,
+  stringToColorValue,
+} from "../../css/CSSUtils";
+import { CssUnit } from "@/src/API/ui/css/CSSProps";
 
 export const Text = ({
   text,
-  fontSize = 10,
-  textAlign = "left",
+  children,
+  styles,
   ...props
 }: {
   text: string;
-  fontSize?: number;
-  textAlign?: "left" | "center" | "right";
+  children?: React.ReactNode;
+  styles?: Partial<BoxModel>;
+  props?: typeof TextDefaultProps;
 }) => {
   const {
     connectors: { connect, drag },
@@ -34,11 +43,35 @@ export const Text = ({
     setEditable(false);
   }, [selected]);
 
+  const computedProps =
+    props === undefined ? TextDefaultProps : { ...TextDefaultProps, ...props };
+
+  const computedStyles = computeStyles([
+    {
+      style: defaultBoxModel,
+    },
+    {
+      style: styles ?? {},
+    },
+    {
+      style: {
+        text: {
+          size: {
+            value: computedProps.fontSize,
+            unit: computedProps.fontUnit as CssUnit,
+          },
+          color: stringToColorValue(computedProps.color),
+        },
+      },
+    },
+  ]);
+
   return (
     <div
       {...props}
       ref={(ref) => connect(drag(ref!))}
       onClick={() => selected && setEditable(true)}
+      style={boxModelToCssProps(computedStyles)}
     >
       <ContentEditable
         html={text}
@@ -50,8 +83,6 @@ export const Text = ({
             500
           )
         }
-        tagName="p"
-        style={{ fontSize: `${fontSize}px`, textAlign }}
       />
     </div>
   );
@@ -82,7 +113,6 @@ const TextSettings = () => {
         min={1}
         max={100}
         step={1}
-        suffix="px"
         onChange={(value) => {
           setProp((props: any) => (props.fontSize = value), 250);
         }}
@@ -92,8 +122,10 @@ const TextSettings = () => {
 };
 
 export const TextDefaultProps = {
-  text: "Hi",
-  fontSize: 10,
+  text: "New Text",
+  fontSize: 12,
+  fontUnit: "px",
+  color: "rgba(255,255,255,1)",
 };
 
 Text.craft = {

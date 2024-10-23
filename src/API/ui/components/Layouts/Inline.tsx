@@ -1,9 +1,9 @@
 import { Slider } from "@/src/components/ui/slider";
 import { useNode } from "@craftjs/core";
 import React from "react";
-import { SliderControl } from "../InspectorControls";
+import { SliderControl } from "../../Inspector/InspectorControls";
 
-export const Stack = ({
+export const Inline = ({
   padding = 12,
   gap = 12,
   maxWidth = 1000,
@@ -20,7 +20,7 @@ export const Stack = ({
 
   return (
     <div
-      className={"border border-dashed border-border w-full flex flex-col"}
+      className={"border border-dashed border-border w-full flex"}
       style={{
         padding: `${padding}px`,
         maxWidth: `${maxWidth}px`,
@@ -33,7 +33,7 @@ export const Stack = ({
   );
 };
 
-export const StackSettings = () => {
+export const InlineSettings = () => {
   const {
     padding,
     gap,
@@ -82,15 +82,15 @@ export const StackSettings = () => {
   );
 };
 
-export const StackDefaultProps = {
+export const InlineDefaultProps = {
   padding: 12,
   gap: 12,
   maxWidth: 1000,
 };
 
-Stack.craft = {
-  props: StackDefaultProps,
+Inline.craft = {
+  props: InlineDefaultProps,
   related: {
-    settings: StackSettings,
+    settings: InlineSettings,
   },
 };
